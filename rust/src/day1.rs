@@ -1,8 +1,9 @@
-pub fn puzzle(input: &str) {
+pub fn puzzle(input: &str) -> String {
     let mut _lines = input.lines();
 
     let answer = 42;
     println!("The answer is {}", answer);
+    format!("{}", answer)
 }
 
 fn recover_calibration_value(line: &str) -> String {

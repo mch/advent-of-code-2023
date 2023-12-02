@@ -5,8 +5,8 @@ mod day1;
 // Add solution modules here
 
 fn main() {
-    let mut solutions: Vec<Box<dyn Fn(&str) -> ()>> = Vec::new();
-    solutions.push(Box::new(|_| { println!("Days of the month start with 1!"); }));
+    let mut solutions: Vec<Box<dyn Fn(&str) -> String>> = Vec::new();
+    solutions.push(Box::new(|_| { "Days of the month start with 1!".to_string() }));
     solutions.push(Box::new(day1::puzzle));
     // Add solution functions here
 
@@ -28,14 +28,15 @@ fn main() {
     }
 }
 
-fn run_all(solutions: Vec<Box<dyn Fn(&str) -> ()>>) {
+fn run_all(solutions: Vec<Box<dyn Fn(&str) -> String>>) {
     println!("No day specified, running all all days...\n");
     let mut solution_iter = solutions.iter();
     solution_iter.next(); // Skip day 0
     for (index, solution) in solution_iter.enumerate() {
         println!("Running day {} solution...", index + 1);
         let input = load_data(index + 1);
-        solution(&input);
+        let answer = solution(&input);
+        println!("Day {} answer: {}", index + 1, answer);
         println!("");
     }
 }

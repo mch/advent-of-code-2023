@@ -42,7 +42,7 @@ fn run_all(solutions: Vec<Box<dyn Fn(&str) -> String>>) {
 }
 
 fn load_data(day: usize) -> String {
-    let filename = format!("data/day-{}-input.txt", day);
+    let filename = format!("../data/day-{}-input.txt", day);
     println!("Loading input from '{}'", filename);
     let input = fs::read_to_string(filename).unwrap();
     input

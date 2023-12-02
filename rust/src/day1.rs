@@ -1,7 +1,10 @@
 pub fn puzzle(input: &str) -> String {
-    let mut _lines = input.lines();
+    let lines = input.lines();
+    let calibration_values = lines.map(recover_calibration_value);
 
-    let answer = 42;
+    let answer = calibration_values.fold(0, |accumulator: u32, value: String| {
+        accumulator + value.parse().unwrap_or(0)
+    });
     println!("The answer is {}", answer);
     format!("{}", answer)
 }
@@ -59,5 +62,11 @@ mod tests {
 
         let result = recover_calibration_value(&line);
         assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn summed_calibration_values() {
+        let input = "1abc2\npqr3stu8vwx\na1b2c3d4e5f\ntreb7uchet";
+        assert_eq!("142", puzzle(input));
     }
 }

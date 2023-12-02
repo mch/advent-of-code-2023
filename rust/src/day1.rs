@@ -7,7 +7,7 @@ pub fn puzzle(input: &str) {
 
 fn recover_calibration_value(line: &str) -> String {
     let matches: Vec<&str> = line.matches(char::is_numeric).collect();
-    matches.join("")
+    format!("{}{}", matches[0], matches[matches.len() - 1])
 }
 
 #[cfg(test)]
@@ -42,4 +42,21 @@ mod tests {
         assert_eq!(expected, result);
     }
 
+    #[test]
+    fn test_extra_digits() {
+        let line = "a1b2c3d4e5f";
+        let expected = "15";
+
+        let result = recover_calibration_value(&line);
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_one_digit() {
+        let line = "treb7uchet";
+        let expected = "77";
+
+        let result = recover_calibration_value(&line);
+        assert_eq!(expected, result);
+    }
 }

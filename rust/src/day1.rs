@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 pub fn puzzle(input: &str) -> String {
     let lines = input.lines();
-    let calibration_values = lines.map(recover_massaged_calibration_value);
+    let calibration_values = lines.map(recover_wordy_calibration_value);
 
     let answer = calibration_values.fold(0, |accumulator: u32, value: String| {
         accumulator + value.parse().unwrap_or(0)
@@ -11,12 +11,10 @@ pub fn puzzle(input: &str) -> String {
     format!("{}", answer)
 }
 
-fn recover_massaged_calibration_value(line: &str) -> String {
-    println!("original line: {}", line);
+fn recover_wordy_calibration_value(line: &str) -> String {
     let massaged_line = parse_all(line);
-    println!("massaged line: {}", massaged_line);
     let recovered = recover_calibration_value(&massaged_line);
-    println!("recovered: {}", recovered);
+    println!("{}, {}, {}", line, massaged_line, recovered);
     recovered
 }
 
@@ -74,18 +72,8 @@ fn parse_all(line: &str) -> String {
 mod tests {
     use super::*;
 
-    // Test list:
-    // 1abc2        12
-    // pqr3stu8vwx  38
-    // a1b2c3d4e5f  15
-    // treb7uchet   77
-
-    // Invariants
-    // Always return a string with two characters
-    // Both characters match [0-9]
-
     #[test]
-    fn test_digits_at_start_and_end() {
+    fn part1_recover_calibration_digits_at_start_and_end() {
         let line = "1abc2";
         let expected = "12";
 
@@ -94,7 +82,7 @@ mod tests {
     }
 
     #[test]
-    fn test_digits_in_middle() {
+    fn part1_recover_calibration_digits_from_middle() {
         let line = "pqr3stu8vwx";
         let expected = "38";
 
@@ -103,7 +91,7 @@ mod tests {
     }
 
     #[test]
-    fn test_extra_digits() {
+    fn part1_recover_calibration_digits_extra_digits_in_middle() {
         let line = "a1b2c3d4e5f";
         let expected = "15";
 
@@ -112,7 +100,7 @@ mod tests {
     }
 
     #[test]
-    fn test_one_digit() {
+    fn part1_recover_calibration_digits_one_digit() {
         let line = "treb7uchet";
         let expected = "77";
 
@@ -121,16 +109,53 @@ mod tests {
     }
 
     #[test]
-    fn summed_calibration_values() {
+    fn part1_summed_calibration_values() {
         let input = "1abc2\npqr3stu8vwx\na1b2c3d4e5f\ntreb7uchet";
         assert_eq!("142", puzzle(input));
     }
 
     #[test]
-    fn summed_calibration_values_part2() {
+   fn part2_recover_calibration_digits_1() {
+        assert_eq!("29", recover_wordy_calibration_value("two1nine"));
+   }
+
+    #[test]
+    fn part2_recover_calibration_digits_2() {
+        assert_eq!("83", recover_wordy_calibration_value("eightwothree"));
+    }
+
+    #[test]
+    fn part2_recover_calibration_digits_3() {
+        assert_eq!("13", recover_wordy_calibration_value("abcone2threexyz"));
+    }
+
+    #[test]
+    fn part2_recover_calibration_digits_4() {
+        assert_eq!("24", recover_wordy_calibration_value("xtwone3four"));
+    }
+
+    #[test]
+    fn part2_recover_calibration_digits_5() {
+        assert_eq!("42", recover_wordy_calibration_value("4nineeightseven2"));
+    }
+
+    #[test]
+    fn part2_recover_calibration_digits_6() {
+        assert_eq!("14", recover_wordy_calibration_value("zoneight234"));
+    }
+
+    #[test]
+    fn part2_recover_calibration_digits_7() {
+        assert_eq!("76", recover_wordy_calibration_value("7pqrstsixteen"));
+    }
+
+    #[test]
+    fn part2_summed_calibration_values() {
         let input = "two1nine\neightwothree\nabcone2threexyz\nxtwone3four\n4nineeightseven2\nzoneight234\n7pqrstsixteen";
         assert_eq!("281", puzzle(input));
     }
+
+    ////////////////////////////////////////////////////////////////////////////////
 
     #[test]
     fn test_replace_word_with_number_1() {
@@ -157,41 +182,6 @@ mod tests {
 
         let result = parse_all(line);
         assert_eq!(expected, recover_calibration_value(&result));
-    }
-
-    #[test]
-   fn test_recover_massaged_calibration_values1() {
-        assert_eq!("29", recover_massaged_calibration_value("two1nine"));
-   }
-
-    #[test]
-    fn test_recover_massaged_calibration_values2() {
-        assert_eq!("83", recover_massaged_calibration_value("eightwothree"));
-    }
-
-    #[test]
-    fn test_recover_massaged_calibration_values3() {
-        assert_eq!("13", recover_massaged_calibration_value("abcone2threexyz"));
-    }
-
-    #[test]
-    fn test_recover_massaged_calibration_values4() {
-        assert_eq!("24", recover_massaged_calibration_value("xtwone3four"));
-    }
-
-    #[test]
-    fn test_recover_massaged_calibration_values5() {
-        assert_eq!("42", recover_massaged_calibration_value("4nineeightseven2"));
-    }
-
-    #[test]
-    fn test_recover_massaged_calibration_values6() {
-        assert_eq!("14", recover_massaged_calibration_value("zoneight234"));
-    }
-
-    #[test]
-    fn test_recover_massaged_calibration_values7() {
-        assert_eq!("76", recover_massaged_calibration_value("7pqrstsixteen"));
     }
 
     #[test]
@@ -262,4 +252,15 @@ mod tests {
     fn parse_all_foo7() {
         assert_eq!(String::from("7pqrst6teen"), parse_all("7pqrstsixteen"));
     }
+
+    #[test]
+    fn parse_all_tricky() {
+        // How it works now
+        assert_eq!(String::from("2ne1ight"), parse_all("twoneoneight"));
+        // How maybe it should work:
+        assert_eq!(String::from("2neon8"), parse_all("twoneoneight"));
+    }
+
+    // get first number word or digit
+    // get last number word or digit
 }

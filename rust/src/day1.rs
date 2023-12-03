@@ -169,6 +169,11 @@ mod tests {
         assert_eq!(String::from("2"), get_last_digit("xxxeightwoxxx"));
     }
 
+    #[test]
+    fn last_digit_is_four() {
+        assert_eq!(String::from("4"), get_last_digit("fmbbkvthdcdmcjxzclk42six4"))
+    }
+
 }
 
 fn get_candidates() -> HashMap<String, String> {
@@ -210,6 +215,7 @@ fn get_first_digit(line: &str) -> String {
     if let Some(bc) = best_candidate {
         digit_numbers_and_words.get(&bc).unwrap().clone()
     } else {
+        println!("WARNING: line {} unlikely handled correctly!", line);
         String::from("0")
     }
 }
@@ -220,8 +226,8 @@ fn get_last_digit(line: &str) -> String {
     let mut max = 0;
     let mut best_candidate: Option<String> = None;
     for candidate in digit_numbers_and_words.keys() {
-        if let Some(offset) = line.find(candidate) {
-            if offset > max {
+        if let Some(offset) = line.rfind(candidate) {
+            if offset >= max {
                 max = offset;
                 best_candidate = Some(candidate.to_string());
             }
@@ -230,6 +236,7 @@ fn get_last_digit(line: &str) -> String {
     if let Some(bc) = best_candidate {
         digit_numbers_and_words.get(&bc).unwrap().clone()
     } else {
+        println!("WARNING: line {} unlikely handled correctly!", line);
         String::from("0")
     }
 }
